@@ -1,0 +1,147 @@
+<lecture endmark="end345">
+        
+<!--
+    ===============================
+    === ADVANCED EXAMPLE SCRIPT ===
+    ===============================
+
+    For a simpler example, 
+    check out example.xml -->
+
+<info 
+    title="An example lecture name"
+    description="This is a short description of the example lecture."
+    authors="Max Mustermann; Erika Musterfrau"
+    copyright="2020 Max Mustermann, University Weimar"
+/>
+
+<settings 
+    voice="amazon-en-gb-amy"
+    resolution="1920x1080"
+    fps="60"
+    breakAfterSlide="1300"
+    breakAfterParagraph="550"
+    googleEffectProfile="headphone-class-device"
+    youtubePrivacyStatus="unlisted"
+/>
+
+<deck id="slides1" src="slides1.pdf" active="true" />
+<deck id="slides2" src="slides2.pdf" />
+
+<lexicon xml:id="lexicon1" alphabet="ipa">
+    <!-- any occurence of "SSEENTENZ" inside the lexicon scope will be replaced with "sentence" -->
+    <lexeme>
+        <grapheme>SSEENTENZ</grapheme>
+        <alias>sentence</alias>
+    </lexeme>
+    <!-- any occurence of the word "pronounce" will be pronounced using a phonetic alphabet 
+        (WARNING! currently only works with Amazon Polly voices) -->
+    <lexeme>
+        <grapheme>pronounce</grapheme>
+        <phoneme>prəˈnaʊns</phoneme>
+    </lexeme>
+    <lexeme>
+        <grapheme>red</grapheme>
+        <alias>blue</alias>
+    </lexeme>
+</lexicon>
+
+<lexicon xml:id="lexicon2" alphabet="ipa">
+    <lexeme>
+        <grapheme>red</grapheme>
+        <alias>green</alias>
+    </lexeme>
+</lexicon>
+
+<!-- define a chapter name (optional) -->
+
+<mark name="intro" chapter="Intro" />
+
+<!-- play a sound file -->
+
+<audio src="audio-example.m4a" clipEnd="2s" />
+
+This is the first spoken sentence. We are on the first slide deck, page 1. Now, we go to the next page on the currently active slide deck!
+
+<slide page="+1" />
+
+Now we are on page 2 of the same slide deck.
+
+<image src="test1.png" fit="fill" />
+
+And now, instead of the slides, an image file is shown.
+
+<break time="1000ms" />
+
+<slide page="+1" />
+
+It's also simply possible to switch languages mid-sentence. Amazon Polly voices work better for this purpose than Google Cloud voices. For a test, this will be <de>ausgesprochen in Deutsch</de>. It's German with an English accent.
+
+<!-- the <de> element here is equivalent to elements <de-DE> and <lang xml:lang="de-DE"> -->
+
+<slide page="+1" />
+
+Now, it'll switch the voice.
+
+<voice name="google-en-us-wavenet-e">
+
+    This sentence will be spoken by a Google Cloud voice.
+
+</voice>
+
+This sentence is spoken in the default voice again. But, we will change the currently shown deck of slides!
+
+<slide deck="slides2" page="1" />
+
+Now, we have a new slide deck opened.
+
+<image src="test2.png" fit="contain" />
+
+The last part of this sentence will be <emphasis level="strong">very strongly emphasized</emphasis>. 
+
+And we'll have a <break time="1s" /> break.
+
+<slide page="2" />
+
+<mark name="lexicon-explanation" chapter="Lexicon Explanation" />
+
+You can also use lexicons to correct the pronunciation of words!
+
+<lookup ref="lexicon1">
+    Now a lexicon is used to pronounce the SSEENTENZ correctly.
+
+    <lookup ref="lexicon2">
+        Now the second lexicon has priority and the first lexicon serves as a fallback.
+        As a test: red will be pronounced as green.
+
+        But since lexicon 1 is the fallback, and the word <emphasis level="strong">sentence</emphasis> is not defined in lexicon 2, the word "SSEENTENZ" will still be correctly pronounced.
+    </lookup>
+</lookup>
+
+If a lexicon is too much, you can also use the sub element, if a word is pronounced incorrectly. The sub element defines an alias which is spoken instead of the <sub alias="text">bla bla blub</sub> within.
+
+If you are using an Amazon Polly voice, you can also apply a phonetic alphabet using the <phoneme alphabet="ipa" ph="ˈfoʊ nim">phoneme</phoneme> element. It defines the pronunciation of a <phoneme alphabet="ipa" ph="wɜrd">WOOOOOOORRRRRRRDDD</phoneme>.
+
+<break time="700ms" />
+
+<mark name="video-section" chapter="Video section" />
+
+Now, a video will be shown!
+
+<video src="video-example.mp4" clipEnd="00:00:03.500" keepFrame="true" />
+
+The video was paused at 3.5 seconds and now continues.
+
+<video src="video-example.mp4" clipBegin="3500ms" keepFrame="true" />
+
+This sentence will be spoken after the video clip, but while the last frame of the video is still shown.
+
+<slide deck="slides1" page="last" />
+
+This sentence is spoken over the last page on the first slide deck.
+
+<mark name="end345" />
+
+This sentence will be ignored, because it comes after the endmark of the name "end345".
+    
+</lecture>

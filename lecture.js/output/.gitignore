@@ -1,0 +1,8 @@
+# ignore all output files
+*
+!.gitignore
+
+# keep example output
+!example-output
+!example-output/*
+!example-output/**/*

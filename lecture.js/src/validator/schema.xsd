@@ -1,0 +1,433 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:ssml="http://www.w3.org/2001/10/synthesis" 
+           xmlns="https://example.com/lecture.js" 
+           targetNamespace="https://example.com/lecture.js"
+           elementFormDefault="qualified">
+    
+    <xs:annotation>
+        <xs:documentation>
+            LSML Schema
+        </xs:documentation>
+    </xs:annotation>
+
+    <!-- import SSML schema https://www.w3.org/TR/speech-synthesis11/#AppD -->
+    <xs:import namespace="http://www.w3.org/2001/10/synthesis" schemaLocation="synthesis.xsd" />
+    
+    <!-- import dependent namespaces, e.g., xml:id -->
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+    
+    <!-- LSML types -->
+    
+    <xs:simpleType name="positiveInteger">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="atLeastOneCharacter">
+        <xs:restriction base="xs:string">
+            <xs:pattern value=".+"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="absoluteOrRelativePath">
+        <xs:annotation>
+            <xs:documentation>
+                ignore Linux absolute paths starting with a, 
+                tilde (~) because lecture.js can not handle them
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[^~]{1}.*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="timestamp">
+        <xs:annotation>
+            <xs:documentation>
+                defines a timestamp 
+                    1) FFmpeg format: 23:59:59 or 23:59:59.999
+                    2) SSML format: 5s or 5000ms
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{2}\:[0-9]{2}\:[0-9]{2}(\.[0-9]{3})?|[0-9]+s|[0-9]+ms" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="googleEffectProfile">
+        <xs:annotation>
+            <xs:documentation>
+                defines valid effect profiles for Google Cloud Text-to-Speech:
+                https://cloud.google.com/text-to-speech/docs/audio-profiles#available_audio_profiles
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="wearable-class-device" />
+            <xs:enumeration value="handset-class-device" />
+            <xs:enumeration value="headphone-class-device" />
+            <xs:enumeration value="small-bluetooth-speaker-class-device" />
+            <xs:enumeration value="medium-bluetooth-speaker-class-device" />
+            <xs:enumeration value="large-home-entertainment-class-device" />
+            <xs:enumeration value="large-automotive-class-device" />
+            <xs:enumeration value="telephony-class-application" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="youtubePrivacyStatus">
+        <xs:annotation>
+            <xs:documentation>
+                defines a privacy status for a video when uploaded to YouTube
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="public" />
+            <xs:enumeration value="unlisted" />
+            <xs:enumeration value="private" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="resourceSpeed">
+        <xs:annotation>
+            <xs:documentation>
+                attribute that defines the speed of an embedded audio
+                file as a percentage value between 50% and 200%
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([5-9][0-9]|1[0-9][0-9]|200)%" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="resourceSoundLevel">
+        <xs:annotation>
+            <xs:documentation>
+                attribute that defines the volume of an embedded audio file
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(\+|\-)(([1-4]?[0-9]{1})|50)dB" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- The following LSML language elements are dynamically determined
+        at run-time using the available languages for the voice APIs. 
+        They may need to be updated from time to time!
+        This includes the main definitions here, as well as 
+        the references to them further down below! -->
+    
+    <xs:element name="ar"/><xs:element name="ar-XA"/><xs:element name="arb"/><xs:element name="bn"/><xs:element name="bn-IN"/><xs:element name="cmn"/><xs:element name="cmn-CN"/><xs:element name="cmn-TW"/><xs:element name="cs"/><xs:element name="cs-CZ"/><xs:element name="cy"/><xs:element name="cy-GB"/><xs:element name="da"/><xs:element name="da-DK"/><xs:element name="de"/><xs:element name="de-DE"/><xs:element name="el"/><xs:element name="el-GR"/><xs:element name="en"/><xs:element name="en-AU"/><xs:element name="en-GB"/><xs:element name="en-GB-WLS"/><xs:element name="en-IN"/><xs:element name="en-US"/><xs:element name="es"/><xs:element name="es-ES"/><xs:element name="es-MX"/><xs:element name="es-US"/><xs:element name="fi"/><xs:element name="fi-FI"/><xs:element name="fil"/><xs:element name="fil-PH"/><xs:element name="fr"/><xs:element name="fr-CA"/><xs:element name="fr-FR"/><xs:element name="gu"/><xs:element name="gu-IN"/><xs:element name="hi"/><xs:element name="hi-IN"/><xs:element name="hu"/><xs:element name="hu-HU"/><xs:element name="id"/><xs:element name="id-ID"/><xs:element name="is"/><xs:element name="is-IS"/><xs:element name="it"/><xs:element name="it-IT"/><xs:element name="ja"/><xs:element name="ja-JP"/><xs:element name="kn"/><xs:element name="kn-IN"/><xs:element name="ko"/><xs:element name="ko-KR"/><xs:element name="ml"/><xs:element name="ml-IN"/><xs:element name="nb"/><xs:element name="nb-NO"/><xs:element name="nl"/><xs:element name="nl-NL"/><xs:element name="pl"/><xs:element name="pl-PL"/><xs:element name="pt"/><xs:element name="pt-BR"/><xs:element name="pt-PT"/><xs:element name="ro"/><xs:element name="ro-RO"/><xs:element name="ru"/><xs:element name="ru-RU"/><xs:element name="sk"/><xs:element name="sk-SK"/><xs:element name="sv"/><xs:element name="sv-SE"/><xs:element name="ta"/><xs:element name="ta-IN"/><xs:element name="te"/><xs:element name="te-IN"/><xs:element name="th"/><xs:element name="th-TH"/><xs:element name="tr"/><xs:element name="tr-TR"/><xs:element name="uk"/><xs:element name="uk-UA"/><xs:element name="vi"/><xs:element name="vi-VN"/><xs:element name="yue"/><xs:element name="yue-HK"/>
+    
+    <!-- LSML custom elements -->
+                            
+    <xs:element name="slide">
+        <xs:annotation>
+            <xs:documentation>
+                switches to another slide deck and/or page
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="page" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="(\+|\-)?[0-9]+|next|previous|first|last" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="deck" type="xs:string" use="optional" />
+            <xs:attribute name="fit" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="contain" />
+                        <xs:enumeration value="cover" />
+                        <xs:enumeration value="fill" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="video">
+        <xs:annotation>
+            <xs:documentation>
+                inserts a video resource
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="src" type="absoluteOrRelativePath" use="required" />
+            <xs:attribute name="keepFrame" type="xs:boolean" use="optional" />
+            <xs:attribute name="clipBegin" type="timestamp" use="optional" />
+            <xs:attribute name="clipEnd" type="timestamp" use="optional" />
+            <xs:attribute name="speed" type="resourceSpeed" use="optional" />
+            <xs:attribute name="soundLevel" type="resourceSoundLevel" use="optional" />
+            <xs:attribute name="repeatCount" type="positiveInteger" use="optional" />
+            <xs:attribute name="fit" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="contain" />
+                        <xs:enumeration value="cover" />
+                        <xs:enumeration value="fill" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="image">
+        <xs:annotation>
+            <xs:documentation>
+                inserts an image resource
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="src" type="absoluteOrRelativePath" use="required" />
+            <xs:attribute name="fit" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="contain" />
+                        <xs:enumeration value="cover" />
+                        <xs:enumeration value="fill" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+                            
+    <!-- modified SSML elements -->
+    
+    <xs:element name="lexicon">
+        <xs:annotation>
+            <xs:documentation>
+                defines a lexicon and assigns it an ID
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="lexeme" minOccurs="1" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            defines a lexeme (basic lexical unit) inside a lexicon
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice minOccurs="2" maxOccurs="2">
+                            <xs:element name="grapheme" type="xs:string" minOccurs="1" maxOccurs="1" />
+                            <xs:element name="alias" type="xs:string" maxOccurs="1" />
+                            <xs:element name="phoneme" type="xs:string" maxOccurs="1" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute ref="xml:id" use="required" />
+            <xs:attribute name="alphabet" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="voice">
+        <xs:annotation>
+            <xs:documentation>
+                changes the narrating voice
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="slide" />
+                <xs:element ref="video" />
+                <xs:element ref="image" />
+                <xs:element ref="audio" />
+                <xs:element ref="mark" />
+                <xs:element ref="say-as" />
+                <xs:element name="p" type="ssml:paragraph" />
+                <xs:element name="s" type="ssml:sentence" />
+                <xs:element name="token" type="ssml:tokenType" />
+                <xs:element name="w" type="ssml:tokenType" />
+                <xs:element name="lang" type="ssml:langType" />
+                <xs:element name="prosody" type="ssml:prosody" />
+                <xs:element name="emphasis" type="ssml:emphasis" />
+                <xs:element name="sub" type="ssml:sub" />
+                <xs:element name="phoneme" type="ssml:phoneme" />
+                <xs:element name="break" type="ssml:break" />
+                <xs:element name="lookup" type="ssml:lookupType" />
+                
+                <!-- LSML Language Codes (see explanation above) --> 
+                
+                <xs:element ref="ar"/><xs:element ref="ar-XA"/><xs:element ref="arb"/><xs:element ref="bn"/><xs:element ref="bn-IN"/><xs:element ref="cmn"/><xs:element ref="cmn-CN"/><xs:element ref="cmn-TW"/><xs:element ref="cs"/><xs:element ref="cs-CZ"/><xs:element ref="cy"/><xs:element ref="cy-GB"/><xs:element ref="da"/><xs:element ref="da-DK"/><xs:element ref="de"/><xs:element ref="de-DE"/><xs:element ref="el"/><xs:element ref="el-GR"/><xs:element ref="en"/><xs:element ref="en-AU"/><xs:element ref="en-GB"/><xs:element ref="en-GB-WLS"/><xs:element ref="en-IN"/><xs:element ref="en-US"/><xs:element ref="es"/><xs:element ref="es-ES"/><xs:element ref="es-MX"/><xs:element ref="es-US"/><xs:element ref="fi"/><xs:element ref="fi-FI"/><xs:element ref="fil"/><xs:element ref="fil-PH"/><xs:element ref="fr"/><xs:element ref="fr-CA"/><xs:element ref="fr-FR"/><xs:element ref="gu"/><xs:element ref="gu-IN"/><xs:element ref="hi"/><xs:element ref="hi-IN"/><xs:element ref="hu"/><xs:element ref="hu-HU"/><xs:element ref="id"/><xs:element ref="id-ID"/><xs:element ref="is"/><xs:element ref="is-IS"/><xs:element ref="it"/><xs:element ref="it-IT"/><xs:element ref="ja"/><xs:element ref="ja-JP"/><xs:element ref="kn"/><xs:element ref="kn-IN"/><xs:element ref="ko"/><xs:element ref="ko-KR"/><xs:element ref="ml"/><xs:element ref="ml-IN"/><xs:element ref="nb"/><xs:element ref="nb-NO"/><xs:element ref="nl"/><xs:element ref="nl-NL"/><xs:element ref="pl"/><xs:element ref="pl-PL"/><xs:element ref="pt"/><xs:element ref="pt-BR"/><xs:element ref="pt-PT"/><xs:element ref="ro"/><xs:element ref="ro-RO"/><xs:element ref="ru"/><xs:element ref="ru-RU"/><xs:element ref="sk"/><xs:element ref="sk-SK"/><xs:element ref="sv"/><xs:element ref="sv-SE"/><xs:element ref="ta"/><xs:element ref="ta-IN"/><xs:element ref="te"/><xs:element ref="te-IN"/><xs:element ref="th"/><xs:element ref="th-TH"/><xs:element ref="tr"/><xs:element ref="tr-TR"/><xs:element ref="uk"/><xs:element ref="uk-UA"/><xs:element ref="vi"/><xs:element ref="vi-VN"/><xs:element ref="yue"/><xs:element ref="yue-HK"/>
+                
+            </xs:choice>
+            <xs:attribute name="name" type="xs:string" use="required" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="say-as">
+        <xs:annotation>
+            <xs:documentation>
+                interprets and says its contents in a certain way
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="atLeastOneCharacter">
+                    <xs:attribute name="interpret-as" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="cardinal" />
+                                <xs:enumeration value="ordinal" />
+                                <xs:enumeration value="characters" />
+                                <xs:enumeration value="spell-out" />
+                                <xs:enumeration value="fraction" />
+                                <xs:enumeration value="expletive" />
+                                <xs:enumeration value="unit" />
+                                <xs:enumeration value="date" />
+                                <xs:enumeration value="time" />
+                                <xs:enumeration value="telephone" />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="format" type="xs:string" use="optional" />
+                    <xs:attribute name="detail" type="xs:string" use="optional" />
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="audio">
+        <xs:annotation>
+            <xs:documentation>
+                inserts an audio resource
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="src" type="absoluteOrRelativePath" use="required" />
+            <xs:attribute name="clipBegin" type="timestamp" use="optional" />
+            <xs:attribute name="clipEnd" type="timestamp" use="optional" />
+            <xs:attribute name="speed" type="resourceSpeed" use="optional" />
+            <xs:attribute name="soundLevel" type="resourceSoundLevel" use="optional" />
+            <xs:attribute name="repeatCount" type="positiveInteger" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="mark">
+        <xs:annotation>
+            <xs:documentation>
+                defines a marker
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="chapter" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- LSML Root & Document Structure -->
+
+    <xs:element name="lecture">
+        <xs:complexType mixed="true">
+            <xs:choice maxOccurs="unbounded">
+
+                <xs:element name="info" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            defines information about the document
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="title" type="xs:string" use="optional" />
+                        <xs:attribute name="description" type="xs:string" use="optional" />
+                        <xs:attribute name="authors" type="xs:string" use="optional" />
+                        <xs:attribute name="copyright" type="xs:string" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="settings" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            defines settings for the generated video lecture
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="voice" type="xs:string" use="optional" />
+                        <xs:attribute name="resolution" use="optional">
+                            <xs:simpleType>
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        defines a video resolution in the format "{width}x{height}", e.g., "1280x720"
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:restriction base="xs:string">
+                                    <!-- match width in range of 128 to 3840 
+                                         match height in range of 72 to 2160 
+                                        http://gamon.webfactional.com/regexnumericrangegenerator/
+                                    -->
+                                    <xs:pattern value="(12[89]|1[3-9][0-9]|[2-9][0-9]{2}|[12][0-9]{3}|3[0-7][0-9]{2}|38[0-3][0-9]|3840)x(7[2-9]|[89][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|1[0-9]{3}|20[0-9]{2}|21[0-5][0-9]|2160)" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="fps" use="optional">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="10" />
+                                    <xs:maxInclusive value="120" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="breakAfterSlide" type="positiveInteger" use="optional" />
+                        <xs:attribute name="breakAfterParagraph" type="positiveInteger" use="optional" />
+                        <xs:attribute name="googleEffectProfile" type="googleEffectProfile" use="optional" />
+                        <xs:attribute name="youtubePrivacyStatus" type="youtubePrivacyStatus" use="optional" />
+                        <xs:attribute name="youtubePlaylistId" type="xs:string" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="deck" minOccurs="1" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            initializes a PDF document with an ID
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="id" type="xs:string" use="required" />
+                        <xs:attribute name="src" type="absoluteOrRelativePath" use="required" />
+                        <xs:attribute name="active" type="xs:boolean" use="optional" />
+                        <xs:attribute name="fit" use="optional">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="contain" />
+                                    <xs:enumeration value="cover" />
+                                    <xs:enumeration value="fill" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                
+                <xs:element ref="lexicon" minOccurs="0" maxOccurs="unbounded" />
+                
+                <xs:element ref="slide" />
+                <xs:element ref="video" />
+                <xs:element ref="image" />
+                <xs:element ref="audio" />
+                <xs:element ref="voice" />
+                <xs:element ref="mark" />
+                <xs:element ref="say-as" />
+                <xs:element name="p" type="ssml:paragraph" />
+                <xs:element name="s" type="ssml:sentence" />
+                <xs:element name="token" type="ssml:tokenType" />
+                <xs:element name="w" type="ssml:tokenType" />
+                <xs:element name="lang" type="ssml:langType" />
+                <xs:element name="prosody" type="ssml:prosody" />
+                <xs:element name="emphasis" type="ssml:emphasis" />
+                <xs:element name="sub" type="ssml:sub" />
+                <xs:element name="phoneme" type="ssml:phoneme" />
+                <xs:element name="break" type="ssml:break" />
+                <xs:element name="lookup" type="ssml:lookupType" />
+                
+                <!-- LSML Language Codes (see explanation above) --> 
+                
+                <xs:element ref="ar"/><xs:element ref="ar-XA"/><xs:element ref="arb"/><xs:element ref="bn"/><xs:element ref="bn-IN"/><xs:element ref="cmn"/><xs:element ref="cmn-CN"/><xs:element ref="cmn-TW"/><xs:element ref="cs"/><xs:element ref="cs-CZ"/><xs:element ref="cy"/><xs:element ref="cy-GB"/><xs:element ref="da"/><xs:element ref="da-DK"/><xs:element ref="de"/><xs:element ref="de-DE"/><xs:element ref="el"/><xs:element ref="el-GR"/><xs:element ref="en"/><xs:element ref="en-AU"/><xs:element ref="en-GB"/><xs:element ref="en-GB-WLS"/><xs:element ref="en-IN"/><xs:element ref="en-US"/><xs:element ref="es"/><xs:element ref="es-ES"/><xs:element ref="es-MX"/><xs:element ref="es-US"/><xs:element ref="fi"/><xs:element ref="fi-FI"/><xs:element ref="fil"/><xs:element ref="fil-PH"/><xs:element ref="fr"/><xs:element ref="fr-CA"/><xs:element ref="fr-FR"/><xs:element ref="gu"/><xs:element ref="gu-IN"/><xs:element ref="hi"/><xs:element ref="hi-IN"/><xs:element ref="hu"/><xs:element ref="hu-HU"/><xs:element ref="id"/><xs:element ref="id-ID"/><xs:element ref="is"/><xs:element ref="is-IS"/><xs:element ref="it"/><xs:element ref="it-IT"/><xs:element ref="ja"/><xs:element ref="ja-JP"/><xs:element ref="kn"/><xs:element ref="kn-IN"/><xs:element ref="ko"/><xs:element ref="ko-KR"/><xs:element ref="ml"/><xs:element ref="ml-IN"/><xs:element ref="nb"/><xs:element ref="nb-NO"/><xs:element ref="nl"/><xs:element ref="nl-NL"/><xs:element ref="pl"/><xs:element ref="pl-PL"/><xs:element ref="pt"/><xs:element ref="pt-BR"/><xs:element ref="pt-PT"/><xs:element ref="ro"/><xs:element ref="ro-RO"/><xs:element ref="ru"/><xs:element ref="ru-RU"/><xs:element ref="sk"/><xs:element ref="sk-SK"/><xs:element ref="sv"/><xs:element ref="sv-SE"/><xs:element ref="ta"/><xs:element ref="ta-IN"/><xs:element ref="te"/><xs:element ref="te-IN"/><xs:element ref="th"/><xs:element ref="th-TH"/><xs:element ref="tr"/><xs:element ref="tr-TR"/><xs:element ref="uk"/><xs:element ref="uk-UA"/><xs:element ref="vi"/><xs:element ref="vi-VN"/><xs:element ref="yue"/><xs:element ref="yue-HK"/>
+                
+            </xs:choice>
+            <xs:attribute name="startmark" type="xs:string" use="optional" />
+            <xs:attribute name="endmark" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

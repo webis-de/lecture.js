@@ -1,0 +1,30 @@
+<lecture><info title="Simple Example"/><settings voice="amazon-en-gb-amy"/><deck id="slides1" src="slides1.pdf" active="true"/><deck id="slides2" src="slides2.pdf"/>
+
+Welcome to a short example that will demonstrate the basic features of the software.
+<break time="550ms" />
+Currently, slide 1 is set as the active slide deck.
+
+<slide page="+1"/><break time="1400ms"/>
+
+Now we are on the second page of slide 1. 
+<break time="550ms" />We can also change the slide deck that is open!
+
+<slide deck="slides2" page="1"/><break time="1400ms"/>
+
+It is also possible to change languages. For a test, this will be <lang xml:lang="de-DE">ausgesprochen in Deutsch</lang>. It spoke German with an English accent.
+<break time="550ms" />
+We can also add breaks and a lot of other cool stuff!
+
+<break time="1500ms"/>
+
+It is possible to insert images!
+
+<image src="test1.png"/>
+
+This program can also play audio files.
+
+<audio src="audio-example.m4a"/>
+
+And videos too!
+
+<video src="video-example.mp4"/></lecture>

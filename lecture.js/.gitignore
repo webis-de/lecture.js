@@ -1,0 +1,6 @@
+# ignore any MP3 audio samples that were generated
+.sample/
+
+# ignore the cached Text-to-Speech audio files
+# (this is the default cache directory)
+.cache/
