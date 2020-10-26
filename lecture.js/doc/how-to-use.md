@@ -4,8 +4,6 @@
 
 This is a step-by-step guide on how to use the lecture.js project.
 
-[[_TOC_]]
-
 
 
 # 1. How to use

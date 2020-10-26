@@ -4,8 +4,6 @@
 
 This is a step-by-step guide on how to set up lecture.js on your machine.
 
-[[_TOC_]]
-
 
 
 # 1. Requirements

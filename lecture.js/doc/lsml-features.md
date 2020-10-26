@@ -6,14 +6,6 @@ This is a list of LSML features and how they are supported by a number of speech
 
 
 
-# Table of contents
-
-[[_TOC_]]
-
-[&uarr; Table of contents]: #table-of-contents "Go to table of contents"
-
-
-
 # Notes
 
 - lecture.js ignores the XML prolog
@@ -54,8 +46,6 @@ The following elements are not supported in combination with each other in Amazo
 # Elements
 
 ## Document Structure
-
-[&uarr; Table of contents]
 
 ### Comments
 
@@ -245,8 +235,6 @@ The following elements are not supported in combination with each other in Amazo
 
 ## Slide Control
 
-[&uarr; Table of contents]
-
 ### &lt;deck/&gt;
 
 | Element             | Attribute      | Description                                                  | LSML (lecture.js)                                | SSML                                              | Amazon Polly                                      | Google Cloud TTS                             | OpenMARY                           |
@@ -285,8 +273,6 @@ The following elements are not supported in combination with each other in Amazo
 
 
 ## Text Structure
-
-[&uarr; Table of contents]
 
 ### &lt;p&gt; and &lt;s&gt;
 
@@ -330,8 +316,6 @@ The following elements are not supported in combination with each other in Amazo
 
 
 ## Voices and Languages
-
-[&uarr; Table of contents]
 
 ### &lt;voice&gt;
 
@@ -385,8 +369,6 @@ Das englische Wort für Katze ist <en-US>cat</en-US>.
 
 
 ## Lexicons
-
-[&uarr; Table of contents]
 
 | Element | Attribute | Description | LSML (lecture.js) | SSML | Amazon Polly | Google Cloud TTS | OpenMARY |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -508,8 +490,6 @@ This text is spoken without a lexicon.
 
 ## Prosodic Features
 
-[&uarr; Table of contents]
-
 ### &lt;emphasis&gt;
 
 | Element | Attribute | Description | LSML (lecture.js) | SSML | Amazon Polly | Google Cloud TTS | OpenMARY |
@@ -557,8 +537,6 @@ Wait is over.
 
 
 ## External Resources
-
-[&uarr; Table of contents]
 
 ### &lt;video/&gt;
 
@@ -662,8 +640,6 @@ Wait is over.
 
 ## Amazon Polly
 
-[&uarr; Table of contents]
-
 ### &lt;amazon:auto-breath/&gt;
 
 | Element | Attribute | Description | LSML (lecture.js) | SSML | Amazon Polly | Google Cloud TTS | OpenMARY |
@@ -707,8 +683,6 @@ Wait is over.
 
 
 # Generic Attributes
-
-[&uarr; Table of contents]
 
 | Attribute | Description | LSML (lecture.js) | SSML | Amazon Polly | Google Cloud TTS | OpenMARY |
 | --- | --- | --- | --- | --- | --- | --- |
