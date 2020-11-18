@@ -286,7 +286,7 @@ const __public = {
             errors.push({
                 setting : 'cache.expiresInDays',
                 value   : DATA.cache.expiresInDays,
-                expect  : 'Integer above 0' 
+                expect  : 'Positive integer' 
             });
         }
 

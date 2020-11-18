@@ -3781,7 +3781,7 @@ scans through all tags and applies changes (including removing invalid tags, con
 | Param | Type | Description |
 | --- | --- | --- |
 | json | <code>Object</code> | JSON representation of XML data |
-| default_voice | <code>Object</code> | default voice to use |
+| default_voice | <code>Object</code> | default voice to use for sections where no other voice is defined |
 | lexicons | <code>Array.&lt;Object&gt;</code> | available lexicons that may be applied |
 | break_between_slides | <code>integer</code> | break time to be added after <slide/> tags in milliseconds |
 
@@ -3818,7 +3818,7 @@ transforms the input XML and applies certain changes
 | --- | --- | --- |
 | options | <code>Object</code> |  |
 | options.input_file | <code>string</code> | absolute path to a XML file |
-| options.default_voice | <code>string</code> | default voice to use |
+| options.default_voice | <code>string</code> | default voice to use for sections with no other voice defined |
 | options.lexicons | <code>Array.&lt;Object&gt;</code> | available lexicons that may be applied |
 | options.break_between_slides | <code>integer</code> | break time to add between <slide/> tags in milliseconds |
 | options.break_between_paragraphs | <code>integer</code> | break time to add between paragraphs in milliseconds |
@@ -3925,6 +3925,7 @@ sets the directoy in which the cache directory will be created, and creates a ca
 
 ## setExpiry(days) ⇒ <code>boolean</code> 
 sets the number of days after which an audio file will be removed from the cache
+if it's set to 0, cached files never expire
 
 **Kind**: Exported function  
 **Returns**: <code>boolean</code> - true if the assignment was successful  

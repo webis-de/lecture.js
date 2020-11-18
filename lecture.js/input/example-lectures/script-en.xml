@@ -1,0 +1,139 @@
+﻿<lecture startmark="intro">
+   
+<info 
+    title="Information Retrieval - Organization"
+    description="The lecture Information Retrieval aims to understand information systems, and search engines in particular."
+    authors="Matthias Hagen; Martin Potthast; Benno Stein"
+    copyright="2020 Martin Potthast, University Leipzig"
+/>
+
+<settings 
+    voice="amazon-en-us-matthew"
+    resolution="1920x1080"
+    fps="30"
+    breakAfterSlide="1500"
+    breakAfterParagraph="550"
+    googleEffectProfile="headphone-class-device"
+    youtubePrivacyStatus="unlisted"
+/>
+
+<deck id="organization" src="unit-en-ir-organization.pdf" active="true" />
+
+MOP.  UNIT EN IR ORGANIZATION NOTES.
+DATE. May 24th, 2020.
+
+<mark name="intro" chapter="Introduction" />
+
+Information Retrieval
+
+A lecture by <de>Matthias Hagen, Martin Potthast</de> and <de>Benno Stein</de>.
+
+<mark name="contents" chapter="Contents" />
+
+<slide page="2" />
+
+The contents of the lecture are divided into 10 chapters.
+
+Following the introduction, the second chapter gives an overview of the architecture and components of a search engine using the example of web search.
+
+The three following chapters deal with the acquisition of data from the Web, the analysis and preparation of text data collected in this way, as well as efficient data management in the form of algorithms and data structures specialized for this purpose.
+
+At the core, Information Retrieval revolves around so-called Retrieval models. These are formal models that quantify the relevance of a document in relation to a search query. In the sixth chapter the most important models and paradigms are presented.
+
+The following chapters deal with the users of search engines; how they are modeled, what types of queries they make, and how search results are prepared for them.
+
+The evaluation of search engines plays a central role here. The goal of the evaluation is to make the effectiveness of the search engine measurable for its users in order to determine which models and paradigms achieve the greatest effectiveness.
+
+Not the subject of this lecture, but also of great importance for modern search engines, are the cross-language retrieval and the retrieval of multimedia data, such as images, videos and audio data.
+
+In order to search large amounts of data, search engines today have to be operated across up to hundreds of thousands of computers. Accordingly, distributed and parallel algorithms and data structures are required.
+
+In addition to web search, there are numerous other application domains where search engines are needed and for which specialized retrieval models are developed. These include digital libraries, enterprise search, medical search, e-discovery, patent search, emails, social media, question answering, ad search, knowledge bases and <say-as interpret-as="spell-out">XML</say-as> retrieval.
+
+The individual chapters are largely designed to be self-contained. Therefore, they can be listened to independently of the sequence presented here.
+
+<mark name="objectives" chapter="Objectives" />
+
+<slide page="3" />
+
+The aim of this lecture is to provide a comprehensive understanding of information systems in general and search engines in particular, as well as a background knowledge of the theory of retrieval models. This knowledge will be applied to the construction of your own search engines.
+
+Furthermore, an understanding and feeling for the practical problems involved, especially the essential problem of comparative evaluation, shall be conveyed and the foundations for self-study shall be laid.
+
+<mark name="related-fields" chapter="Related Fields" />
+
+<slide page="4" />
+
+Information retrieval is based on a number of related areas. From statistics and mathematics, paradigms and models are used to derive retrieval models. 
+
+Methods and algorithms of data mining and machine learning are applied in numerous situations in information retrieval. Methods from the fields of natural language processing are traditionally used for the preparation of texts to be searched.
+
+The knowledge processing also provides, among other things, methods that should enable search engines to provide factual knowledge or even to draw simple conclusions. 
+
+All these methods are primarily used in the construction of web search engines, as well as in search engines from special application areas. In the corporate environment, these are especially the business intelligence, as well as decision support systems.
+
+<mark name="literature" chapter="Literature" />
+
+<slide page="5" />
+
+The lecture is based on the relevant textbooks of the field as well as selected research papers.
+
+The book "Search Engines: Information Retrieval in Practice" by Croft, Metzler and Strohman, as well as the book "Introduction to Information Retrieval" by Manning, Raghavan and Schütze were used.
+
+The former book by Croft et al. is easy to read and gives a comprehensive overview of the construction of web search engines. The book by Manning et al. is more formal and gives deeper insights.
+
+Both are available for free download as e-books.
+
+<slide page="6" />
+
+The book "Information Retrieval: <de-DE>Suchmodelle und Data-Mining-Verfahren für Textsammlungen und das Web</de-DE>" by Reginald Ferber can serve as German reading material. This book is also available online.
+
+All other books can be used to deepen the subject matter, whereby the book "Managing Gigabytes: Compressing and Indexing Documents and Images" by Witten, Moffat and Bell deals especially with algorithms and data structures and the book "The Turn: Integration of Information Seeking and Retrieval" by Ingwersen and Järvelin shows the perspective of information science.
+
+The two books by van Rijsbergen as well as Salton and McGill are among the introductions to "Information Retrieval".
+
+<slide page="7" />
+
+In order to acquire specialized knowledge that goes beyond the introductory contents of the textbooks, as well as to get to know the state of the art of research in the field of "Information Retrieval", a look at the relevant research is recommended!
+
+Much of the research in computer science is published at conferences organized by representatives of the respective research community.
+
+Leading is the "Special Interest Group for Information Retrieval" <say-as interpret-as="spell-out">SIGIR</say-as> of the "Association for Computing Machinery", also called <say-as interpret-as="spell-out">ACM</say-as>, which organizes the annual <say-as interpret-as="spell-out">SIGIR</say-as> conference of the same name
+
+Further conferences, which are basically about information retrieval, are, among others, the "European Conference on Information Retrieval" <say-as interpret-as="spell-out">ECIR</say-as> and the "Asia Information Retrieval Symposium" <say-as interpret-as="spell-out">AIRS</say-as>, both of which are held in Europe and Asia.
+
+The four conferences with the abbreviations <say-as interpret-as="spell-out">TREC</say-as>, <say-as interpret-as="spell-out">CLEF</say-as>, <say-as interpret-as="spell-out">NTCIR</say-as>, and <say-as interpret-as="spell-out">FIRE</say-as> play a special role information retrieval. For decades, research competitions have been held here every year, inviting researchers and students from all over the world to develop new solutions for specific retrieval problems and to let them compete against each other.
+
+A number of other high-level conferences invite contributions to information retrieval as part of their wider program, including the <say-as interpret-as="spell-out">WSDM</say-as>, or also called "Wisdom", and the <say-as interpret-as="spell-out">WWWW</say-as> conference on the world wide web.
+
+In addition, there are numerous high-ranking conferences of related research areas, which publish or present research relevant to onformation retrieval, or which present research using methods of information retrieval.
+
+These are, for example, the conferences whose abbreviations contain the letters <say-as interpret-as="spell-out">CL</say-as> and <say-as interpret-as="spell-out">NLP</say-as>, which stand for computational linguistics and the natural language processing respectively, <say-as interpret-as="spell-out">KD</say-as> and <say-as interpret-as="spell-out">DM</say-as>, which stands for knowledge discovery and data mining, <say-as interpret-as="spell-out">IST</say-as> for information science and technology, <say-as interpret-as="spell-out">ML</say-as> and <say-as interpret-as="spell-out">AI</say-as> for machine learning and artificial intelligence, and <say-as interpret-as="spell-out">DL</say-as> for digital libraries.
+
+In addition, there are a number of relevant journals and book series from various publishers.
+
+A large part of the research papers published at these conferences and in these journals are freely available on the web. Use academic search engines such as Google Scholar, Microsoft Academic or Semantic Scholar to search these papers!
+
+If a paper is not freely available, please try again from within the university network or contact the library!
+
+<mark name="software" chapter="Software" />
+
+<slide page="8" />
+
+The most important open source software for the information retrieval from an industry point of view is probably Lucene, a project funded by the Apache Software Foundation. Lucene implements the basic algorithms and data structures as well as a number of well-known retrieval models and can index terabytes of data for searching.
+
+The projects Apache <sub alias="Solar">Solr</sub> and <sub alias="Elastic Search">Elasticsearch</sub>, both based on Lucene, add further functionality, and in particular enable the implementation of distributed search engines. These well-developed libraries are available for free!
+
+From a research point of view there are two more libraries that are widely used, namely Terrier and Lemur. These libraries also implement experimental retrieval models and are designed to be used for research in information retrieval.
+
+Of course, there are numerous other large and small software projects, which implement information retrieval technology for research, development, and education.
+
+<slide page="9" />
+
+Two web services important for research in information retrieval are "Common Crawl" and the research search engine "<sub alias="Chat Noir">ChatNoir</sub>".
+
+The "Common Crawl" project creates a several terabytes large data set of the most visited websites every month. Unlike the web crawls of commercial search providers, this web crawl is provided free of charge.
+
+The search engine <sub alias="Chat Noir">ChatNoir</sub> indexes among other things the Common Crawl. This is the largest research search engine ever made available to the research community. Unlike commercial web search engines, <sub alias="Chat Noir">ChatNoir</sub> offers researchers a freely accessible, scalable application programming interface, or <say-as interpret-as="spell-out">API</say-as>, and can thus serve as a reference search engine for comparative experiments, among other things. The source code of <sub alias="Chat Noir">ChatNoir</sub> is also freely available.
+    
+</lecture>

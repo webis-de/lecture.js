@@ -337,8 +337,8 @@ const parseInput = async() => {
     const preprocessed_xml = await _.preprocessor.process({
         input_path               : ARGS.input,
         lexicons                 : meta.lexicons,
-        default_voice            : CONFIGURATION.audio.defaultVoice,
-        break_between_slides      : break_between_slides,
+        default_voice            : meta.settings.voice ? meta.settings.voice : CONFIGURATION.audio.defaultVoice,
+        break_between_slides     : break_between_slides,
         break_between_paragraphs : break_between_paragraphs
     });
     if (!preprocessed_xml) {
@@ -1360,7 +1360,10 @@ const uploadToYoutube = async() => {
     
     // get the privacy status of the video
     let privacy_status = 'unlisted';
-    if (_.uploader.isValidPrivacyStatus(DATA.settings.youtubePrivacyStatus.toString())) {
+    if (
+        DATA.settings.youtubePrivacyStatus &&
+        _.uploader.isValidPrivacyStatus(DATA.settings.youtubePrivacyStatus+'')
+    ) {
         privacy_status = DATA.settings.youtubePrivacyStatus;
     }
     else if (_.uploader.isValidPrivacyStatus(CONFIGURATION.upload.defaultYoutubePrivacyStatus)) {

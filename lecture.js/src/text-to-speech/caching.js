@@ -43,7 +43,7 @@ const EOL = _.os.EOL;
 let IDENTIFIERS = null;
 
 // cache settings
-let EXPIRE_IN_DAYS = 1;
+let EXPIRE_IN_DAYS = 0;
 let CACHE_DIR = null;
 let CACHE_INDEX_FILE = null;
 
@@ -213,14 +213,20 @@ const removeNonindexedCachedFiles = () => {
  */
 const removeOldFiles = () => {
     
+    // don't remove any cached files, if expiry date is set to 0
+    if (EXPIRE_IN_DAYS === 0) {
+        return;
+    }
+    
     // check if all cached files still exist, if not, remove them from cache
     Object.keys(IDENTIFIERS).forEach(id => {
         
+        // get cache information about the file
         const path = IDENTIFIERS[id].path;
         const date = IDENTIFIERS[id].date;
-        const current_date = Date.now();
         
-        // get difference in days
+        // get time difference to cache date in days
+        const current_date = Date.now();
         const diff_time = Math.abs(current_date - date);
         const diff_days = Math.ceil(diff_time / (1000 * 60 * 60 * 24));
         
@@ -266,6 +272,7 @@ const __public = {
     
     /**
      * sets the number of days after which an audio file will be removed from the cache
+     * if it's set to 0, cached files never expire
      *
      * @function
      * @alias module:text_to_speech/cache
@@ -275,7 +282,7 @@ const __public = {
      * @returns {boolean} true if the assignment was successful
      */
     setExpiry : days => {
-        if (!_.type.isInteger(days) || days < 1) {
+        if (!_.type.isInteger(days) || days < 0) {
             return false;
         }
         EXPIRE_IN_DAYS = days;

@@ -66,7 +66,7 @@ const TAGS = {
  * @category private
  *
  * @param {Object} json - JSON representation of XML data
- * @param {Object} default_voice - default voice to use
+ * @param {Object} default_voice - default voice to use for sections where no other voice is defined
  * @param {Array.<Object>} lexicons - available lexicons that may be applied
  * @param {integer} break_between_slides - break time to be added after <slide/> tags in milliseconds
  * @returns {Promise.<Object>} JSON representation of XML data
@@ -475,7 +475,7 @@ const __public = {
      *
      * @param {Object} options
      * @param {string} options.input_file - absolute path to a XML file
-     * @param {string} options.default_voice - default voice to use
+     * @param {string} options.default_voice - default voice to use for sections with no other voice defined
      * @param {Array.<Object>} options.lexicons - available lexicons that may be applied
      * @param {integer} options.break_between_slides - break time to add between <slide/> tags in milliseconds
      * @param {integer} options.break_between_paragraphs - break time to add between paragraphs in milliseconds
@@ -501,7 +501,7 @@ const __public = {
         }
         
         if (!_.tts.voiceExists(options.default_voice)) {
-            _.logger.error(`Voice "${options.default_voice}" given as default voice does not exist`);
+            _.logger.error(`Voice "${options.default_voice}" was given as the default voice, but it does not exist`);
             return;
         }
         

@@ -1,0 +1,160 @@
+﻿MOP.  UNIT EN IR ORGANIZATION NOTES.
+DATE. May 24th, 2020.
+
+
+[slide 1]
+
+Information Retrieval
+Eine Vorlesung von Matthias Hagen, Martin Potthast und Benno Stein.
+
+
+[slide 2] (slide updated)
+
+Die Inhalte der Vorlesung sind in 10 Kapitel unterteilt.
+
+Im Anschluss and die Einleitung gibt das zweite Kapitel einen Überblick über die Architektur und Komponenten einer Suchmaschine am Beispiel der Websuche.
+
+Die drei folgenden Kapitel befassen sich mit der Akquise von Daten aus dem Web, der Analyse und Aufbereitung von so gesammelten Textdaten, sowie der effizienten Datenverwaltung in Form von darauf spezialisierten Algorithmen und Datenstrukturen.
+
+Im Kern dreht sich das Information Retrieval um sogenannte Retrieval-Modelle. Das sind formale Modelle, die die Relevanz eines Dokuments in Bezug auf eine Suchanfrage quantifizieren. Im sechsten Kapitel werden die wichtigsten Modelle und Paradigmen vorgestellt.
+
+In den folgenden Kapiteln geht es um die Nutzer von Suchmaschinen; wie sie modelliert werden, welche Arten von Anfragen sie stellen, und wie Suchergebnisse für sie aufbereitet werden.
+
+Die Evaluierung von Suchmaschinen spielt hierbei ein zentrale Rolle: Ziel der Evaluierung ist, die Effektivität der Suchmaschine für ihre Nutzer messbar zu machen, um festzustellen, welche Modelle und Paradigmen die größte Effektivität erzielen.
+
+
+Nicht Gegenstand dieser Vorlesung, jedoch ebenfalls von großem Belang für moderne Suchmaschinen sind das sprachübergreifende Retrieval sowie das Retrieval von Multimedia-Daten, wie Bilder, Videos und Audiodaten.
+
+Um große Datenmengen zu durchsuchen, müssen Suchmaschinen heute über bis zu hunderttausende Rechner verteilt betrieben werden. Hierfür werden dementsprechend verteilte und parallele Algorithmen und Datenstrukturen benötigt.
+
+Neben der Websuche gibt es noch zahlreiche weitere Anwendungsdomänen, in denen Suchmaschinen benötigt und für die spezialisierte Retrieval-Modelle entwickelt werden: Digital Libraries, Enterprise Search, Medical Search, eDiscovery, Patent Search, Emails, Social Media. Question Answering. Ad Search. Knowledge Bases. XML Retrieval.
+
+
+Die einzelnen Kapitel sind weitgehend so gestaltet, dass sie in sich geschlossen sind. Sie können daher auch unabhängig von der hier vorgestellten Reihenfolge gehört werden.
+
+
+
+[slide 3]
+
+Die Lernziele der Vorlesung sind
+
+- ein umfassendes Verständnis von Informationssysteme im Allgemeinen und von Suchmaschinen im Speziellen
+
+- Hintergrundwissen über die Theorie von Retrieval-Modellen
+
+- ihre Umsetzung und Anwendung zur Konstruktion eigener Suchmaschinen
+
+- ein Verständnis und Gefühl für die damit verbundenen praktischen Probleme, und hier insbesondere das essentielle Problem der vergleichenden Evaluierung
+
+- die Grundlagen für das Selbststudium zu legen
+
+
+
+[slide 4]
+
+Das Information Retrieval basiert auf einer Reihe verwandter Gebiete:
+
+- Aus der Statistik und der Mathematik werden Paradigmen und Modelle zur Herleitung von Retrieval-Modellen herangezogen
+
+- Methoden und Algorithmen des Data Minings und Maschinellen Lernens werden in zahlreichen Situationen im Information Retrieval angewendet. 
+
+- Methoden aus den Gebieten der Verarbeitung natürlicher Sprache werden traditionell für die Aufbereitung von zu durchsuchenden Texten eingesetzt.
+
+- Das Knowledge Processing liefert darüber hinaus u.a. Methoden, die es Suchmaschinen ermöglichen sollen, Faktenwissen zu liefern oder gar einfache Schlussfolgerungen zu ziehen.
+
+
+All diese Methoden fließen primär in den Bau von Websuchmaschinen sowie von Suchmaschinen in speziellen Anwendungsbereichen.
+
+Im Unternehmensumfeld sind das insbesondere die Business Intelligence sowie Decision Support Systeme.
+
+
+
+[slide 5]
+
+Der Vorlesung liegen die einschlägigen Lehrbücher des Fachgebiets sowie ausgewählte Forschungsarbeiten zugrunde.
+
+Die Bücher 
+
+- Search Engines: Information Retrieval in Practice von Croft, Metzler und Strohman 
+
+sowie
+
+- Introduction to Information Retrieval von Manning, Raghavan und Schütze 
+
+wurden herangezogen.
+
+Das erstgenannte Buch von Croft et al. ist leicht zu lesen und gibt einen umfassenden Überblick über die Konstruktion von Websuchmaschinen.
+
+Das Buch von Manning et al. ist formaler und gibt vertiefende Einblicke.
+
+Beide stehen als eBooks zum freien Download zu Verfügung.
+
+
+
+[slide 6]
+
+Als deutschsprachige Lektüre kann das Buch Information Retrieval: Suchmodelle und Data-Mining-Verfahren für Textsammlungen und das Web von Reginald Ferber dienen. Dieses Buch ist ebenfalls online verfügbar.
+
+Alle übrigen Bücher können der Vertiefung des Stoffes dienen, wobei das Buch Managing Gigabytes: Compressing and Indexing Documents and Images von Witten, Moffat und Bell insbesondere Algorithmen und Datenstrukturen behandelt und das Buch The Turn: Integration of Information Seeking and Retrieval in Context von Ingwersen und Järvelin die Perspektive der Informationswissenschaften aufzeigt.
+
+Die beiden Bücher von van Rijsbergen sowie Salton und McGill zählen zu den Einführungen in das Information Retrieval.
+
+
+
+[slide 7] (slide updated)
+
+Um Fachwissen, das über die einführenden Inhalte der Lehrbücher hinausgeht, zu erwerben, sowie den Stand der Forschung im Bereich des Information Retrievals kennenzulernen, ist ein Blick in die einschlägige Forschung zu empfehlen.
+
+Ein Großteil der Forschung in der Informatik wird auf Konferenzen veröffentlicht, die von Vertretern der jeweiligen Forschungsgemeinde organisiert werden.
+
+Führend ist die Special Interest Group für das Information Retrieval (SIGIR) der Association for Computing Machinery (ACM), die jährlich die gleichnamige SIGIR-Konferenz ausrichtet.
+
+Weitere Konferenzen, die sich im Kern um das Information Retrieval drehen, sind unter anderen die European Conference on Information Retrieval (ECIR, oder auch ecir) und das Asia Information Retrieval Symposium (AIRS), die jeweils im europäischen und asiatischen Raum veranstaltet werden.
+
+Die vier Konferenzen mit den Kürzeln TREC, CLEF, NTCIR, und FIRE spielen eine besondere Rolle im Information Retrieval: Hier werden seit Jahrzehnten jedes Jahr Forschungswettbewerbe ausgerichtet, die Forscher und Studierende aus aller Welt einladen, für spezifische Retrieval-Probleme neue Lösungen zu entwickeln, und sie gegeneinander antreten zu lassen.
+
+Eine Reihe weiterer hochrangiger Konferenzen laden Beiträge zum Information Retrieval als Teil ihres darüber hinausgehenden Programms ein, darunter die WSDM (oder aus Wisdom) und die WWW-Konferenz über das World Wide Web.
+
+Darüber hinaus gibt es zahlreiche hochrangige Konferenzen verwandter Forschungsgebiete, die für das Information Retrieval relevante Forschung publizieren bzw. auf denen auch Forschung präsentiert wird, die auf Methoden des Information Retrieval zurückgreift.
+
+So zum Beispiel die Konferenzen, deren Kürzel die Buchstaben CL und NLP enthalten, was für Computerlinguistik und das Natural Language Processing steht, KD und DM, was für Knowledge Discovery und Data Mining steht, IST für Information Science and Technology, ML und AI für Machine Learning und Artificial Intelligence, und DL für Digital Libraries.
+
+Darüber hinaus gibt es noch eine Reihe von einschlägigen Journalen und Buchreihen verschiedener Verlage.
+
+
+
+Ein großer Teil der Forschungspapiere, die auf diesen Konferenzen und in diesen Journalen veröffentlicht werden, steht frei im Web. Nutzen Sie akademische Suchmaschinen, wie Google Scholar, Microsoft Academic oder Semantic Scholar, um diese Papiere zu durchsuchen.
+
+Sollte ein Papier mal nicht frei verfügbar sein, versuchen Sie es von innerhalb des Netzwerks der Uni noch einmal, oder wenden Sie sich an die Bibliothek.
+
+
+[slide 8]
+
+Die wichtigste Open Source Software für das Information Retrieval aus Sicht der Industrie ist wohl Lucene, ein von der Apache Software Foundation gefördertes Projekt.
+
+Lucene implementiert die grundlegenden Algorithmen und Datenstrukturen sowie eine Reihe bekannter Retrieval-Modelle und kann bis zu Terabytes an Daten für die Suche indizieren.
+
+Die Projekte Solr und Elasticsearch, die beide auf Lucene aufbauen, fügen weitere Funktionen hinzu, und ermöglichen insbesondere die Implementierung verteilter Suchmaschinen.
+
+Diese gut entwickelten Bibliotheken stehen quelloffen zur Verfügung.
+
+
+Aus Sicht der Forschung gibt es noch zwei weitere Bibliotheken, die weithin eingesetzt werden, nämlich Terrier und Lemur.
+
+Diese Bibliotheken implementieren auch experimentelle Retrieval-Modelle und sind darauf ausgelegt, für die Forschung im Information Retrieval verwendet zu werden.
+
+Es gibt darüber hinaus natürlich noch zahlreiche weitere große und kleine Softwareprojekte, die Information Retrieval-Technologie für Forschung, Entwicklung, und Lehre umsetzen.
+
+
+[slide 9]
+
+Zwei für die Forschung im Information Retrieval wichtige Webdienste sind das Common Crawl und die Forschungssuchmaschine ChatNoir.
+
+Das Common Crawl-Projekt erstellt jeden Monat einen mehrere Terabyte umfassenden Datensatz der meistbesuchten Webseiten. Anders als die Webcrawls der kommerziellen Suchanbieter, wird dieser Webcrawl kostenfrei zur Verfügung gestellt.
+
+Die Suchmaschine ChatNoir indiziert unter anderem das Common Crawl. Es handelt sich um die größte Forschungssuchmaschine, die bis dato für die Forschungsgemeinde zur Verfügung gestellt wurde. Anders als kommerzielle Websuchmaschinen, bietet ChatNoir Forschenden ein frei zugängliches, skalierbares Application Programming Interface, und kann so unter anderem als Referenzsuchmaschine für vergleichende Experimente dienen. Auch der Quellcode von ChatNoir steht zur freien Verfügung.
+
+
+[end]
+
+

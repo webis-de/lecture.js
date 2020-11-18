@@ -1,6 +1,6 @@
 [![Logo text colored with blue gradient saying "lecture.js"](img/logo_small.png)](#)
 
-Lecture.js is a tool to convert PDF slides and scripts to spoken video lectures using advanced text-to-speech services from Amazon and Google. It implements a custom XML-based language, the lecture synthesis markup language (LSML), which supports the integration of PDF slides, controlling the voice and language, embedding of images, audio and video clips, and video quality settings.
+Lecture.js is a tool to convert PDF slides and scripts to spoken video lectures using advanced text-to-speech services from Amazon and Google. It implements a custom XML-based language, the Lecture Synthesis Markup Language (LSML), which supports the integration of PDF slides, controlling the voice and language, embedding of images, audio and video clips, and video quality settings.
 
 # How to use
 
