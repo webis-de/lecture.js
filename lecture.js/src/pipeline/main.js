@@ -54,7 +54,7 @@ _.is_online = require('is-online');
  * =========
  */
 
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 
 
 
@@ -386,6 +386,8 @@ const parseInput = async() => {
  */
 const createDirectories = async() => {
             
+    // check if "nowrap" is disabled, which means that 
+    // the output should be wrapped in another sub folder
     if (!ARGS.nowrap) {
         
         // wrap the output files in an extra folder inside the user-defined output folder
@@ -454,19 +456,17 @@ const createDirectories = async() => {
 const convertVideoClips = async() => {
     
     // generate all requests to convert embedded video resources
-    let counter = 0;
     let requests = [];
-    DATA.resources.video.forEach(video => {
+    // go through all embedded video resources that were detected
+    DATA.resources.video.forEach((video, counter) => {
         
-        counter++;
-        
-        // convert all variants
+        // convert all variants of the video
         Object.keys(video.variants).forEach(variant_key => {
             
             const variant = video.variants[variant_key];
 
             // create and save the output path for the converted video
-            const output_path = _.path.join(CLIPS_DIRECTORY, 'resource-' + (counter+'').padStart(3, '0') + '-' + variant_key.replace(/[^a-z0-9\-]+/gi, '_') + '.mp4');
+            const output_path = _.path.join(CLIPS_DIRECTORY, 'resource-' + ((counter+1)+'').padStart(3, '0') + '-' + variant_key.replace(/[^a-z0-9\-]+/gi, '_') + '.mp4');
             video.variants[variant_key].path = output_path;
 
             // generate a log file at this path
@@ -668,19 +668,17 @@ const convertVideoClips = async() => {
 const convertAudioClips = async() => {
     
     // generate all requests to trim embedded audio resources
-    let counter = 0;
     let requests = [];
-    DATA.resources.audio.forEach(audio => {
+    // go through all embedded audio resources that were detected
+    DATA.resources.audio.forEach((audio, counter) => {
         
-        counter++;
-        
-        // go through the different video trims and generate requests
+        // go through the different variants for the resource and generate requests
         Object.keys(audio.variants).forEach(variant_key => {
             
             const variant = audio.variants[variant_key];
             
             // create output path for the converted video
-            const output_path = _.path.join(AUDIO_DIRECTORY, 'resource-' + (counter+'').padStart(3, '0') + '-' + variant_key.replace(/[\:\.]{1}/g, '_') + _.path.extname(audio.path));
+            const output_path = _.path.join(AUDIO_DIRECTORY, 'resource-' + ((counter+1)+'').padStart(3, '0') + '-' + variant_key.replace(/[\:\.]{1}/g, '_') + _.path.extname(audio.path));
             variant.path = output_path;
         
             // generate a log file at this path

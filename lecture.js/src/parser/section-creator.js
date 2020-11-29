@@ -83,21 +83,25 @@ let MARKS = {};
 // holds references to all chapters
 let CHAPTERS = [];
 
-// information about the section that is currently being created
+// object that holds information about the section that is currently being created
+// it's a state object which means the data it holds is updated while the LSML code is processed
 const CURRENT = {
+    // numbering of the sections
     id : 1,
+    // holds the name of the currently active voice 
     voice : '',
     // information about the frame of the current section
     frame_type : '', // possible types: slide, video, image
-    frame_fit : '', // how to fit the current frame to the resolution
+    frame_fit : '', // how to fit the current frame to the video resolution
     // file path to the currently active image (only from <image> tags)
     image_id : '',
-    // if CURRENT.frame_type = 'slide'
+    // if CURRENT.frame_type is set to 'slide', the current frame of the section is taken from a slide deck (PDF document)
     slide_deck : '', // id of current slide deck
     page : 0,
-    // if CURRENT.frame_type = video
+    // if CURRENT.frame_type is set to 'video' the last frame of it
+    // remains after the video stopped playing as the next active frame
     video : '', // path to the video out of which the current frame is taken
-    // contains the SSML tags and text contained in the current section
+    // contains the SSML tags and text that should be included in the currently processed section
     content : {
         elements : []
     }
@@ -724,7 +728,7 @@ const __public = {
         // globally save path to the directory where the input XML file is located
         INPUT_SCRIPT_DIR_PATH = input_script_dir_path;
 
-        // reset parser temporary values
+        // reset temporary values
         SECTIONS             = [];
         CURRENT.id           = 1;
         CURRENT.voice        = meta.settings.voice ? meta.settings.voice : configuration.audio.defaultVoice;
@@ -811,6 +815,7 @@ const __public = {
             }
         });
         
+        // if any generated section is too long, print a warning and exit
         if (failed_sections === 0) {
             _.logger.message(`All generated sections are within character limits set by the APIs`);
         }

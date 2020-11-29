@@ -10,7 +10,7 @@ This is a step-by-step guide on how to set up lecture.js on your machine.
 
 There are a number of requirements for lecture.js to run.
 
-1. Use the operating system **Windows 10 (64-Bit)** or **Linux Ubuntu 16.04+**.
+1. You must use the operating system **Windows 10 (64-Bit)** or **Linux Ubuntu 16.04+**. Other Linux distributions may work fine as well, but were not tested.
 2. Install **Node.js** version 12 or higher:
     1. On Windows 10, you need download and execute the [installer](https://nodejs.org/en/download/).
     2. On Linux Ubuntu, you need to follow these [instructions](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions).
@@ -44,9 +44,9 @@ After the required software is installed on your machine, follow these steps to 
 
 # 3. Add credentials
 
-Credentials are needed to access the APIs used by lecture.js. Of the following APIs, you **must** set up the credentials for **at least** one Text-to-speech API _(Google Cloud and/or Amazon Polly)_, or the pipeline won't work. Only the voices from the Text-to-speech APIs that are set up with credentials are useable.
+Credentials are needed to access the APIs used by lecture.js. Of the following APIs, you **must** set up the credentials for **at least** one Text-to-speech API _(Google Cloud and/or Amazon Polly)_, or the pipeline won't work. In the software, you can only use the voices from those Text-to-speech APIs that you have set up with valid credentials files!
 
-## 3.1 Google Cloud
+## 3.1 Google Cloud Text-to-Speech
 
 [![Google Cloud logo](img/logo_google_cloud_small.png)](#)
 

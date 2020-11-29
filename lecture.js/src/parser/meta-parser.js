@@ -57,9 +57,10 @@ const handleInfo = tag => {
     
     if (!tag.attributes || tag.attributes.length === 0) {
         _.logger.warn(`Ignored tag <info /> with no attributes`);
+        return;
     }
     
-    // add all tag properties on tag to META.info
+    // copy all properties from the element
     Object.keys(tag.attributes).forEach(key => {
         META.info[key] = tag.attributes[key];
     });
@@ -79,9 +80,10 @@ const handleSettings = tag => {
     
     if (!tag.attributes || tag.attributes.length === 0) {
         _.logger.warn(`Ignored tag <settings /> with no attributes`);
+        return;
     }
     
-    // add all tag properties on tag to META.settings
+    // copy all properties from the element
     Object.keys(tag.attributes).forEach(key => {
         
         let value = tag.attributes[key];
@@ -331,12 +333,12 @@ const __public = {
         
         // reset the META object
         META = {};
-        META.info     = {
+        META.info = {
             title : 'No Title'
         };
         META.settings = {};
-        META.marks    = {};
-        META.decks   = {};
+        META.marks = {};
+        META.decks = {};
         META.lexicons = [];
     
         // get specific attributes from <lecture> and save them in the META object
@@ -351,8 +353,8 @@ const __public = {
         // count certain XML elements
         let info_tags     = 0;
         let settings_tags = 0;
-        let deck_elements    = 0;
-        let active_decks = 0;
+        let deck_elements = 0;
+        let active_decks  = 0;
 
         // go through JSON representation of XML and assigns values to the META object
         await _.basic.forEachAsync(root_tag.elements, async(tag) => {
@@ -409,6 +411,7 @@ const __public = {
             errors.push(`Multiple <deck /> tags can't be set as active`);
         }
 
+        // if errors were thrown, don't return data and print them to terminal
         if (errors.length > 0) {
             _.logger.errorMultiple(errors);
             return;

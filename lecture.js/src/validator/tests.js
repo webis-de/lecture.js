@@ -49,26 +49,99 @@ const TEST_FOLDER = _.path.join(__dirname, '.tests');
 // (includes already-closed-again requests)
 let COUNTER = 0;
 
-// tests with XML for which validation should pass
-const PASS_TEST = [];
+// array holding all tests for which validation should pass
+const PASS_THIS = [];
 
-// tests with XML for which validation should fail
-const FAIL_TEST = [];
+// array holding all tests for which validation should fail
+const DO_NOT_PASS_THIS = [];
 
 
 
 /*
- * =====
- * TESTS
- * =====
+ * ================
+ * TEST DEFINITIONS
+ * ================
  */
+
+/*
+ * <image>
+ */
+
+PASS_THIS.push({
+    name : `<image> attribute 'src'`,
+    content : `
+        <image src="image.png" />
+        <image src="path/to/image.png" />
+        <image src="/path/to/image.png" />
+        <image src="C:/path/to/image.png" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> no 'src' attribute`,
+    content : `<video />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<image> with content`,
+    content : `<image src="image.png">content</image>`
+});
+
+PASS_THIS.push({
+    name : `<video> attribute 'fit'`,
+    content : `
+        <image src="image.png" fit="contain" />
+        <image src="image.png" fit="cover" />
+        <image src="image.png" fit="fill" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> invalid value for attribute 'fit'`,
+    content : `
+        <image src="image.png" fit="abc" />`
+});
+
+
+
+/*
+ * <lang> (and LSML-custom language elements)
+ */
+
+PASS_THIS.push({
+    name : `<lang> attribute 'xml:lang'`,
+    content : `
+        <lang xml:lang="de"></lang>
+        <lang xml:lang="de-DE"></lang>
+        <lang xml:lang="en"></lang>
+        <lang xml:lang="en-US"></lang>`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<lang> no language defined as attribute`,
+    content : `<lang></lang>`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<lang> no content`,
+    content : `<lang />`
+});
+
+PASS_THIS.push({
+    name : `<de>, <de-DE>, <en>, <en-US>`,
+    content : `
+        <de></de>
+        <de-DE></de-DE>
+        <en></en>
+        <en-US></en-US>`
+});
+
+
 
 /*
  * <say-as>
  */
 
-PASS_TEST.push({
-    name : `<say-as>`,
+PASS_THIS.push({
+    name : `<say-as> attribute 'interpret-as'`,
     content : `
         <say-as interpret-as="cardinal">a</say-as>
         <say-as interpret-as="ordinal">a</say-as>
@@ -82,43 +155,227 @@ PASS_TEST.push({
         <say-as interpret-as="telephone">a</say-as>`
 });
 
-FAIL_TEST.push({
+PASS_THIS.push({
+    name : `<say-as> attributes 'format', 'detail'`,
+    content : `
+        <say-as interpret-as="date" format="ymd" detail="1">2020, November 29.</say-as>
+        <say-as interpret-as="date" format="dmy">29. November, 2020</say-as>`
+});
+
+DO_NOT_PASS_THIS.push({
     name : `<say-as> no content`,
     content : `<say-as interpret-as="cardinal" />`
 });
 
-FAIL_TEST.push({
+DO_NOT_PASS_THIS.push({
     name : `<say-as> no 'interpret-as' value`,
     content : `<say-as>2</say-as>`
 });
 
-FAIL_TEST.push({
+DO_NOT_PASS_THIS.push({
     name : `<say-as> invalid 'interpret-as' value`,
-    content : `<say-as interpret-as="abcdefg" />`
+    content : `<say-as interpret-as="abcdefg">content</say-as>`
 });
+
+
+
+/*
+ * <slide>
+ */
+
+PASS_THIS.push({
+    name : `<slide> attribute 'page'`,
+    content : `
+        <slide page="1" />
+        <slide page="10" />
+        <slide page="+1" />
+        <slide page="+10" />
+        <slide page="-1" />
+        <slide page="-10" />
+        <slide page="next" />
+        <slide page="previous" />
+        <slide page="first" />
+        <slide page="last" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<slide> no 'src' attribute`,
+    content : `<slide />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<slide> with content`,
+    content : `<slide page="1">content</slide>`
+});
+
+PASS_THIS.push({
+    name : `<slide> attribute 'deck'`,
+    content : `
+        <slide page="1" deck="abc" />`
+});
+
+PASS_THIS.push({
+    name : `<slide> attribute 'fit'`,
+    content : `
+        <slide page="1" fit="contain" />
+        <slide page="1" fit="cover" />
+        <slide page="1" fit="fill" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<slide> invalid value for attribute 'fit'`,
+    content : `
+        <slide page="1" fit="abc" />`
+});
+
+
 
 /*
  * <video>
  */
 
-PASS_TEST.push({
-    name : `<video>`,
+PASS_THIS.push({
+    name : `<video> attribute 'src'`,
+    content : `
+        <video src="video.mp4" />
+        <video src="path/to/video.mp4" />
+        <video src="/path/to/video.mp4" />
+        <video src="C:/path/to/video.mp4" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> no 'src' attribute`,
+    content : `<video />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> Linux tilde-absolute path in attribute 'src'`,
+    content : `
+        <video src="~path/to/video.mp4" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> with content`,
+    content : `<video src="video.mp4">content</video>`
+});
+
+PASS_THIS.push({
+    name : `<video> attributes 'keepFrame'`,
     content : `
         <video src="video.mp4" keepFrame="true" />
+        <video src="video.mp4" keepFrame="false" />`
+});
+
+PASS_THIS.push({
+    name : `<video> attribute 'clipBegin', 'clipEnd'`,
+    content : `
+        <video src="video.mp4" clipBegin="2ms" />
+        <video src="video.mp4" clipEnd="2ms" />
+        <video src="video.mp4" clipBegin="4s" />
+        <video src="video.mp4" clipEnd="4s" />
         <video src="video.mp4" clipBegin="00:00:04" />
         <video src="video.mp4" clipEnd="00:00:04" />
         <video src="video.mp4" clipBegin="05:01:10.500" />
         <video src="video.mp4" clipEnd="99:99:99.999" />`
 });
 
-FAIL_TEST.push({
-    name : `<video> no source`,
-    content : `<video />`
+DO_NOT_PASS_THIS.push({
+    name : `<video> space character in 'clipBegin' attribute`,
+    content : `<video src="video.mp4" clipBegin="5s " />`
 });
 
-FAIL_TEST.push({
-    name : `<video> wrong timestamp`,
+DO_NOT_PASS_THIS.push({
+    name : `<video> wrong SSML-style timestamp`,
+    content : `<video src="video.mp4" clipBegin="5k" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> wrong FFmpeg-style timestamp`,
     content : `<video src="video.mp4" clipBegin="00:00:000" />`
+});
+
+PASS_THIS.push({
+    name : `<video> attribute 'speed'`,
+    content : `
+        <video src="video.mp4" speed="50%" />
+        <video src="video.mp4" speed="100%" />
+        <video src="video.mp4" speed="200%" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> value too high for attribute 'speed'`,
+    content : `
+        <video src="video.mp4" speed="201%" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> value too low for attribute 'speed'`,
+    content : `
+        <video src="video.mp4" speed="49%" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> invalid value for attribute 'speed'`,
+    content : `
+        <video src="video.mp4" speed="+100%" />`
+});
+
+PASS_THIS.push({
+    name : `<video> attribute 'soundLevel'`,
+    content : `
+        <video src="video.mp4" soundLevel="+50dB" />
+        <video src="video.mp4" soundLevel="-50dB" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> value too high for attribute 'soundLevel'`,
+    content : `
+        <video src="video.mp4" soundLevel="+51dB" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> value too low for attribute 'soundLevel'`,
+    content : `
+        <video src="video.mp4" soundLevel="-51dB" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> invalid value for attribute 'soundLevel'`,
+    content : `
+        <video src="video.mp4" soundLevel="50%" />`
+});
+
+PASS_THIS.push({
+    name : `<video> attribute 'repeatCount'`,
+    content : `
+        <video src="video.mp4" repeatCount="1" />
+        <video src="video.mp4" repeatCount="10" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> number '0' for attribute 'repeatCount'`,
+    content : `
+        <video src="video.mp4" repeatCount="0" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> invalid value for attribute 'repeatCount'`,
+    content : `
+        <video src="video.mp4" repeatCount="a" />`
+});
+
+PASS_THIS.push({
+    name : `<video> attribute 'fit'`,
+    content : `
+        <video src="video.mp4" fit="contain" />
+        <video src="video.mp4" fit="cover" />
+        <video src="video.mp4" fit="fill" />`
+});
+
+DO_NOT_PASS_THIS.push({
+    name : `<video> invalid value for attribute 'fit'`,
+    content : `
+        <video src="video.mp4" fit="abc" />`
 });
 
 
@@ -235,9 +492,10 @@ ${xml}`;
  */
 const runPassingTests = async() => {
     
-    let requests = [];
+    const requests = [];
+    let passed = 0;
     
-    _.basic.forEachAsync(PASS_TEST, async(test) => {
+    _.basic.forEachAsync(PASS_THIS, async(test) => {
         
         COUNTER++;
         
@@ -261,9 +519,11 @@ const runPassingTests = async() => {
         const callback = output => {
             if (!output) {
                 console.log(_.format.brightRed + ` Failed: ${test.name}` + _.format.reset);
-                return;
             }
-            console.log(_.format.brightGreen + ` Successfully passed: ${test.name}`+ _.format.reset);
+            else {
+                console.log(_.format.brightGreen + ` Successfully passed: ${test.name}`+ _.format.reset);
+                passed++;
+            }
         };
 
         const options = {
@@ -289,10 +549,15 @@ const runPassingTests = async() => {
         // run the requests in parallel
         await _.requester.run(
             requests,
-            { max_concurrent : 7,
-              max_per_second : 5 }
+            { max_concurrent : 10,
+              max_per_second : 7 }
         );
     }
+    
+    return {
+        total : PASS_THIS.length,
+        passed : passed
+    };
 };
 
 /**
@@ -307,9 +572,10 @@ const runPassingTests = async() => {
  */
 const runFailingTests = async() => {
     
-    let requests = [];
+    const requests = [];
+    let passed = 0;
     
-    _.basic.forEachAsync(FAIL_TEST, async(test) => {
+    _.basic.forEachAsync(DO_NOT_PASS_THIS, async(test) => {
         
         COUNTER++;
         
@@ -333,9 +599,11 @@ const runFailingTests = async() => {
         const callback = output => {
             if (output) {
                 console.log(_.format.brightRed + ` Wrongly passed: ${test.name}`+ _.format.reset);
-                return;
             }
-            console.log(_.format.brightGreen + ` Successfully failed: ${test.name}` + _.format.reset);
+            else {
+                console.log(_.format.brightGreen + ` Successfully failed: ${test.name}` + _.format.reset);
+                passed++;
+            }
         };
         
         const options = {
@@ -361,10 +629,15 @@ const runFailingTests = async() => {
         // run the requests in parallel
         await _.requester.run(
             requests,
-            { max_concurrent : 7,
-              max_per_second : 5 }
+            { max_concurrent : 10,
+              max_per_second : 7 }
         );
     }
+    
+    return {
+        total : DO_NOT_PASS_THIS.length,
+        passed : passed
+    };
 };
 
 
@@ -378,7 +651,7 @@ const runFailingTests = async() => {
  *
  * @returns {Promise.<undefined>}
  */
-const runTests = async() => {
+(async() => {
     
     // create a folder holding the test files, if not yet existant
     if (!_.fs.existsSync(TEST_FOLDER)) {
@@ -397,11 +670,18 @@ const runTests = async() => {
         `=====================`    
     );
     
-    // start running the tests
-    await runPassingTests();
-    await runFailingTests();
+    // run the tests for code segments that are valid
+    const {total, passed} = await runPassingTests();
+    if (total !== passed) {
+        console.log(`Failed ${(total - passed)} tests of ${total}`);
+    }
     
+    // run the tests for code segments that are invalid
+    const {total : total2, passed : passed2} = await runFailingTests();
+    if (total2 !== passed2) {
+        console.log(`Failed ${(total2 - passed2)} tests of ${total2}`);
+    }
+    
+    // print an empty line at the end
     console.log('');
-};
-
-runTests();
+})();

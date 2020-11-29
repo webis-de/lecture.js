@@ -36,13 +36,16 @@ _.tts = require('../text-to-speech/main.js');
  * ===========
  */
 
+// holds data about which elements to transform how
 const TAGS = {
     
     // language tags like <en>, <en-US>, <de>, etc.
+    // data about these is automatically loaded from the Text-to-Speech APIs at run-time
     language : [],
     
     // valid tags that should be converted to a different names/attributes
     convert : {
+        // convert <token> to <w> elements
         token : {
             name : 'w'
         }
@@ -58,20 +61,20 @@ const TAGS = {
  */
 
 /**
- * scans through all tags and applies changes (including removing invalid tags, converting language tags, etc.)
+ * scans through LSML code and applies specific transformations (including the removal of invalid elements, converting language elements, etc.)
  *
  * @async
  * @function
  * @alias module:parser/preprocessor
  * @category private
  *
- * @param {Object} json - JSON representation of XML data
+ * @param {Object} json - JSON representation of LSML/XML data
  * @param {Object} default_voice - default voice to use for sections where no other voice is defined
  * @param {Array.<Object>} lexicons - available lexicons that may be applied
  * @param {integer} break_between_slides - break time to be added after <slide/> tags in milliseconds
  * @returns {Promise.<Object>} JSON representation of XML data
  */
-const preprocessTags = async(json, default_voice, lexicons, break_between_slides) => {
+const processCode = async(json, default_voice, lexicons, break_between_slides) => {
 
     // removes a tag and moves up its children into its prior position
     const removeTag = (siblings, index) => {
@@ -448,8 +451,19 @@ const addBreaksBetweenParagraphs = (xml, duration) => {
     if (duration > 0) {
 
         // match empty space between text paragraphs
-        // regex matches one text letter at beginning and end, with whitespace and at least one new line in the middle
-        xml = xml.replace(/([^\<\>\n\r\s\t ]{1})([\n\r\s\t ]*?)(\r\n|\n|\r){1}([\n\r\s\t ]*?)([^\<\>\n\r\s\t ]{1})/g, `$1$2$3<break time="${duration}ms" />$4$5`);
+        //
+        // regex explanation:
+        //   matches one non-LSML-non-Whitespace-character at the end of the earlier paragraph 
+        //      (e.g. a letter, number, dot, exclamation mark, ...)
+        //   and one non-LSML-non-Whitespace-character at the beginning of the next paragraph 
+        //      (probably a letter) 
+        //   with all whitespace and at least one new line in the middle
+        xml = xml.replace(
+            // regex
+            /([^\<\>\n\r\s\t ]{1})([\n\r\s\t ]*?)(\r\n|\n|\r){1}([\n\r\s\t ]*?)([^\<\>\n\r\s\t ]{1})/g, 
+            // insert the matched/replaced characters with the break in the middle between the two paragraphs
+            `$1$2$3<break time="${duration}ms" />$4$5`
+        );
     }
     
     return xml;
@@ -538,7 +552,7 @@ const __public = {
         let json = _.xml_converter.xml2json(xml);
         
         // process the JSON data
-        json = await preprocessTags(json, options.default_voice, options.lexicons, options.break_between_slides);
+        json = await processCode(json, options.default_voice, options.lexicons, options.break_between_slides);
         if (!json) {
             _.logger.error(`Failed preprocessing the XML input file`);
             return;

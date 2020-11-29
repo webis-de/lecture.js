@@ -1,6 +1,6 @@
 /**
  * @module pipeline/cli-worker
- * @desc parses CLI arguments and prints to the terminal
+ * @desc parses command line arguments and manages certain terminal-printing options
  *
  * @example
  * const _ = {};
@@ -149,7 +149,7 @@ const __public = {
     },
     
     /**
-     * prints all the available voices to the terminal
+     * prints all the available Text-to-Speech voices to the terminal
      *
      * @async
      * @function
@@ -172,7 +172,7 @@ const __public = {
         
         let current_language = null;
         
-        // go through all voice (names)
+        // go through all voice names
         Object.keys(voices).forEach(voice_name => {
             let voice = voices[voice_name];
             
@@ -188,7 +188,7 @@ const __public = {
     },
     
     /**
-     * prints all the available languages to the terminal
+     * prints all the available Text-to-Speech languages to the terminal
      *
      * @async
      * @function
@@ -253,10 +253,11 @@ const __public = {
      */
     getArguments : () => {
         
-        // if arguments were already cached, returned them
+        // if arguments were already parsed and cached, 
+        // return a copy of the cached version
         if (_.basic.getLength(ARGS) !== 0) {
             return {
-                args   : _.basic.deepCopy(ARGS),
+                args : _.basic.deepCopy(ARGS),
                 errors : 0
             };
         }
@@ -278,7 +279,7 @@ const __public = {
             string : ['i', 'input', 'o', 'output', 'voice', 'text', 'cache'],
             // arguments to be parsed as boolean values
             boolean : ['s', 'sample', 'nowrap', 'clearcache', 'h', 'help', 'v', 'version', 'voices', 'languages', 'ssml'],
-            // different names for the same arguments
+            // different names for the same arguments (synonyms)
             alias : {
                 v : 'version',
                 h : 'help',

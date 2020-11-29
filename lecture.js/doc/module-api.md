@@ -100,7 +100,7 @@ The other scripts in the module directory are already required by the main scrip
     </tr>
 <tr>
     <td><a href="#module_pipeline/cli-worker">pipeline/cli-worker</a></td>
-    <td><p>parses CLI arguments and prints to the terminal</p>
+    <td><p>parses command line arguments and manages certain terminal-printing options</p>
 </td>
     </tr>
 <tr>
@@ -3431,7 +3431,7 @@ parses a string of XML
 <a name="module_pipeline/cli-worker"></a>
 
 # pipeline/cli-worker
-parses CLI arguments and prints to the terminal
+parses command line arguments and manages certain terminal-printing options
 
 **Example**  
 ```js
@@ -3472,7 +3472,7 @@ prints a help menu to the terminal
 <a name="exp_module_pipeline/cli-worker--printVoices"></a>
 
 ## printVoices() ⇒ <code>Promise.&lt;boolean&gt;</code> 
-prints all the available voices to the terminal
+prints all the available Text-to-Speech voices to the terminal
 
 **Kind**: Exported function  
 **Returns**: <code>Promise.&lt;boolean&gt;</code> - true on success  
@@ -3483,7 +3483,7 @@ prints all the available voices to the terminal
 <a name="exp_module_pipeline/cli-worker--printLanguages"></a>
 
 ## printLanguages() ⇒ <code>Promise.&lt;boolean&gt;</code> 
-prints all the available languages to the terminal
+prints all the available Text-to-Speech languages to the terminal
 
 **Kind**: Exported function  
 **Returns**: <code>Promise.&lt;boolean&gt;</code> - true on success  
@@ -3761,7 +3761,7 @@ _.preprocessor = require('/preprocessor/main.js');
 
 * [parser/preprocessor](#module_parser/preprocessor)
     * _private_
-        * [preprocessTags(json, default_voice, lexicons, break_between_slides)](#exp_module_parser/preprocessor--preprocessTags) ⇒ <code>Promise.&lt;Object&gt;</code> 
+        * [processCode(json, default_voice, lexicons, break_between_slides)](#exp_module_parser/preprocessor--processCode) ⇒ <code>Promise.&lt;Object&gt;</code> 
         * [addBreaksBetweenParagraphs(xml, duration)](#exp_module_parser/preprocessor--addBreaksBetweenParagraphs) ⇒ <code>string</code> 
     * _public_
         * [process(options)](#exp_module_parser/preprocessor--process) ⇒ <code>Promise.&lt;string&gt;</code> 
@@ -3769,10 +3769,10 @@ _.preprocessor = require('/preprocessor/main.js');
 
 * * *
 
-<a name="exp_module_parser/preprocessor--preprocessTags"></a>
+<a name="exp_module_parser/preprocessor--processCode"></a>
 
-## preprocessTags(json, default_voice, lexicons, break_between_slides) ⇒ <code>Promise.&lt;Object&gt;</code> 
-scans through all tags and applies changes (including removing invalid tags, converting language tags, etc.)
+## processCode(json, default_voice, lexicons, break_between_slides) ⇒ <code>Promise.&lt;Object&gt;</code> 
+scans through LSML code and applies specific transformations (including the removal of invalid elements, converting language elements, etc.)
 
 **Kind**: Exported function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON representation of XML data  
@@ -3780,7 +3780,7 @@ scans through all tags and applies changes (including removing invalid tags, con
 
 | Param | Type | Description |
 | --- | --- | --- |
-| json | <code>Object</code> | JSON representation of XML data |
+| json | <code>Object</code> | JSON representation of LSML/XML data |
 | default_voice | <code>Object</code> | default voice to use for sections where no other voice is defined |
 | lexicons | <code>Array.&lt;Object&gt;</code> | available lexicons that may be applied |
 | break_between_slides | <code>integer</code> | break time to be added after <slide/> tags in milliseconds |
@@ -4694,7 +4694,6 @@ testing suite for the validator
     * [addDeckTag()](#exp_module_validator/tests--addDeckTag) ⇒ <code>string</code> \| <code>string</code> 
     * [runPassingTests()](#exp_module_validator/tests--runPassingTests) ⇒ <code>Promise.&lt;undefined&gt;</code> 
     * [runFailingTests()](#exp_module_validator/tests--runFailingTests) ⇒ <code>Promise.&lt;undefined&gt;</code> 
-    * [runTests()](#exp_module_validator/tests--runTests) ⇒ <code>Promise.&lt;undefined&gt;</code> 
 
 
 * * *
@@ -4768,16 +4767,6 @@ runs all defined tests that should pass
 
 ## runFailingTests() ⇒ <code>Promise.&lt;undefined&gt;</code> 
 runs all defined tests that should fail
-
-**Kind**: Exported function  
-**Category**: private  
-
-* * *
-
-<a name="exp_module_validator/tests--runTests"></a>
-
-## runTests() ⇒ <code>Promise.&lt;undefined&gt;</code> 
-runs all defined tests
 
 **Kind**: Exported function  
 **Category**: private  

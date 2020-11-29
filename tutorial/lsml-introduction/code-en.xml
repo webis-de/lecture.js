@@ -1,0 +1,260 @@
+<lecture>
+    
+    <info 
+        title="An introduction to LSML"
+        description="This is a short introduction to the markup language LSML."
+    />
+    <settings 
+        voice="amazon-en-gb-amy"
+        resolution="1920x1080"
+        fps="30"     
+        breakAfterSlide="1300"
+        breakAfterParagraph="550"
+    />
+
+    <deck id="slides" src="slides-en.pdf" active="true" />
+
+    Welcome to a demonstration of the functions of the markup language <say-as interpret-as="characters">LSML</say-as>.
+    
+    <slide page="2" />
+    
+    Here you can see the program code that is currently being read out. But before we get into code, let's get to the basics first.
+    
+    <slide page="3" />
+    
+    <say-as interpret-as="characters">LSML</say-as> stands for Lecture Synthesis Markup Language, and is a language for defining lectures visually and audibly, as well as human and machine readable, in text form. 
+    
+    <slide page="4" />
+    
+    <say-as interpret-as="characters">LSML</say-as> is based on the hierarchically structured markup language <say-as interpret-as="characters">XML</say-as>. Using <say-as interpret-as="characters">XML</say-as> as a basis offers some advantages, since it is widely used with many existing libraries.
+    
+    The biggest advantage, however, is that a language based on <say-as interpret-as="characters">XML</say-as> already exists, which allows speech synthesis.
+    
+    <say-as interpret-as="characters">SSML</say-as>, or Speech Synthesis Markup Language, was developed by the World Wide Web Consortium to define the pronunciation of texts. It is used by many Text-to-Speech services, which includes Amazon Polly and Google Cloud Text-to-Speech, which are integrated into Lecture <say-as interpret-as="characters">js</say-as>.
+    
+    <slide page="5" />
+    
+    <say-as interpret-as="characters">SSML</say-as> already defines many elements that can be taken over by <say-as interpret-as="characters">LSML</say-as>. But since the Text-to-Speech services implement this standard only incompletely with some differences between each other, some elements must be adapted by <say-as interpret-as="characters">LSML</say-as>.
+    
+    <slide page="6" />
+    
+    Some elements are also too restricted or unfitting to be used in <say-as interpret-as="characters">LSML</say-as>, so they are removed.
+    
+    <slide page="7" />
+    
+    Some of these elements are replaced by new elements.
+    
+    <slide page="8" />
+    
+    In addition, there are also other new elements that control the visual aspects of the lecture. These include, for example, which slide is shown when, or which settings the video should have. 
+    
+    The challenge here is to keep <say-as interpret-as="characters">LSML</say-as> as simple as possible and to avoid clutter to allow non-programmers to use the language.
+    
+    This table looks complicated, but don't worry! We will now take a short look at the most important functions of the language, and hopefully it will be much clearer!
+    
+    <slide page="9" />
+    
+    Each document starts with a lecture element. This is the root element and contains all other elements, as well as the text to be spoken.
+    
+    <slide page="10" />
+    
+    A deck element is also defined. This references a <say-as interpret-as="characters">PDF</say-as> document, which contains the set of slides for the lecture. Several sets of slides can be included, but there must always be at least one.
+    
+    <slide page="11" />
+    
+    Now you could already write your text and have it rendered as a video. The example here would look like this.
+    
+    <slide page="12" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        This is spoken.
+        
+        <break time="1500ms" />
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="13" />
+    
+    As you will notice, it was automatically recognized that this was a sentence.
+    
+    <slide page="14" />
+    
+    But if that fails, you can explicitly define the paragraph with the <emphasis level="strong">p</emphasis> element and the sentence with the <emphasis level="strong">s</emphasis> element. But this is mostly unnecessary and the final product is often the same.
+    
+    <slide page="15" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        This is spoken.
+        
+        <break time="1500ms" />
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="16" />
+    
+    You can change the page using the "slide" element.
+    
+    <slide page="+1" />
+    
+    This element defines the relative or absolute page number, and the following text is spoken over the corresponding slide.
+    
+    <slide page="+1" />
+    
+    You can also use this element to easily change the active slide deck. In this example, two sets of slides are loaded. The first slide set is active from the beginning and the second slide set is applied from line 8 onwards.
+    
+    <slide page="+1" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        This is spoken.
+    </voice>
+    
+    <slide page="+1" />
+    
+    <voice name="amazon-en-us-matthew">
+        This is spoken on page 2.
+    </voice>
+    
+    <slide page="+1" />
+    
+    <voice name="amazon-en-us-matthew">
+        This is spoken on page 1 of the second slide deck.
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="22" />
+    
+    To give structure to the presentation, you can also integrate markers, which can be used to optionally define chapters.
+    
+    <slide page="+1" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        This is the introduction.
+        <break time="1s" />
+        This is chapter 2.
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="24" />
+    
+    Of course you can also use different voices with the "voice" element. This makes it possible to simulate a dialogue for example.
+    
+    <slide page="+1" />
+    
+    <!-- Example -->
+    
+    <voice name="google-es-es-wavenet-b">
+        Hola como estas?
+    </voice>
+    
+    <voice name="amazon-de-de-vicki">
+        Mir geht es gut! Danke für die Nachfrage!
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="26" />
+    
+    To make the spoken word more interesting, you can also manually insert pauses and emphasize certain segments as in this example. Let's listen to it.
+    
+    <slide page="+1" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        A pause is inserted <break time="1500ms" /> there.
+        
+        And this sentence is <emphasis level="strong">strongly emphasized.</emphasis>
+        
+        <break time="1500ms" />
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="28" />
+    
+    There are several ways to correct the mispronunciation of words. For example, there is the "sub" element, which allows to define an "alias".
+    
+    In the code example, the acronym <say-as interpret-as="characters">AB</say-as> is defined. However, the alias "Alpha Beta" is spoken instead.
+    
+    <slide page="+1" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        
+        <sub alias="Alpha Beta">AB</sub>
+        
+        <break time="1500ms" />
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="30" />
+    
+    Of course you can also give the written text additional context with the "say-as" element. This element defines how its content should be interpreted. 
+    
+    In this example, the program is instructed to pronounce the numbers as single digits instead of saying "one hundred and twenty-three".
+    
+    <slide page="+1" />
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        
+        <say-as interpret-as="characters">123</say-as>
+        
+        <break time="1500ms" />
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="32" />
+    
+    <say-as interpret-as="characters">LSML</say-as> also allows the insertion of other resources, not only slides. For example, it is possible to insert your own videos with <say-as interpret-as="characters">LSML</say-as>.
+    
+    In the following example, a video is played for 3 seconds.
+    
+    <!-- Example -->
+    
+    <video src="video.mp4" clipEnd="3s" />
+    
+    <!-- End -->
+    
+    <slide page="33" />
+    
+    In addition to slides, you can of course also embed images directly into the video. With this code snippet here, an example image is shown.
+    
+    <!-- Example -->
+    
+    <voice name="amazon-en-us-matthew">
+        <image src="image.png" />
+        This is an example image.
+    </voice>
+    
+    <!-- End -->
+    
+    <slide page="34" />
+    
+    That was the demonstration of <say-as interpret-as="characters">LSML</say-as>. Of course there is more, but hopefully this is still a good overview.
+    
+    I just leave you with a little melody.
+    
+    <!-- Example -->
+    
+    <audio src="melody.m4a" />
+    
+    <!-- End -->
+    
+</lecture>

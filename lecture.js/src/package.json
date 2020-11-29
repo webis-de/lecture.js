@@ -1,6 +1,6 @@
 {
     "name": "lecture.js",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "lecture.js",
     "description": "Generates spoken lectures from the LSML language (extension of XML-based SSML)",
     "homepage": "https://github.com/webis-de/lecture.js",
