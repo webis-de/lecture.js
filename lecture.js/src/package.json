@@ -22,7 +22,7 @@
         "ffprobe-static": "^3.0.0",
         "googleapis": "^59.0.0",
         "@google-cloud/text-to-speech": "^3.0.1",
-        "ini": "^1.3.5",
+        "ini": "^1.3.6",
         "is-online": "^8.4.0",
         "lz-string": "^1.4.4",
         "mri": "^1.1.6",
