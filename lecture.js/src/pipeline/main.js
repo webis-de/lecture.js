@@ -54,7 +54,7 @@ _.is_online = require('is-online');
  * =========
  */
 
-const VERSION = '1.0.2';
+const VERSION = '1.0.3';
 
 
 
