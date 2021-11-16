@@ -17,7 +17,7 @@
     "contributors": [],
     "dependencies": {
         "@google-cloud/text-to-speech": "^3.0.1",
-        "aws-sdk": "^2.720.0",
+        "aws-sdk": "^2.814.0",
         "canvas": "^2.6.1",
         "ffmpeg-static": "^4.2.7",
         "ffprobe-static": "^3.0.0",
